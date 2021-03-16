@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Chess_ai_Blank", "Chess_ai_Blank\Chess_ai_Blank.pyproj", "{33F1C381-E316-4DC2-B49E-FF81849F3A9D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{33F1C381-E316-4DC2-B49E-FF81849F3A9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33F1C381-E316-4DC2-B49E-FF81849F3A9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {539DFD58-ADFA-4730-9B66-4F2454B15BAE}
+	EndGlobalSection
+EndGlobal
