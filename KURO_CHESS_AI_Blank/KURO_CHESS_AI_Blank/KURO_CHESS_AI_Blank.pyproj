@@ -4,8 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>cbcfd987-ee3c-42e5-8ec7-aadfb10402ad</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>
-    </StartupFile>
+    <StartupFile>Chess_GUI.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -23,6 +22,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Chess_ai_Blank.py" />
+    <Compile Include="chess_engine.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chess_GUI.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
