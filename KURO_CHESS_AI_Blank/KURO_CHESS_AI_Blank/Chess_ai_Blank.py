@@ -27,7 +27,7 @@ gameover=0
 
 point=0
 while True:
-    if gamecount>10000:
+    if gamecount>1000:
         break;
     field_index=read_field(board)
     for piece in range(16,32):
@@ -75,7 +75,7 @@ while True:
         for i in range(len(white)-1,-1,-1):
             q_data[white[i][0],white[i][1],white[i][2],white[i][3],white[i][4],white[i][5],white[i][6]]=q_data[white[i][0],white[i][1],white[i][2],white[i][3],white[i][4],white[i][5],white[i][6]]+reward*e
             e=e/10
-        e=0
+        e=1
         for i in range(len(black)-1,-1,-1):
             q_data[black[i][0],black[i][1],black[i][2],black[i][3],black[i][4],black[i][5],black[i][6]]=q_data[black[i][0],black[i][1],black[i][2],black[i][3],black[i][4],black[i][5],black[i][6]]-reward*e
             e=e/10
@@ -128,7 +128,7 @@ while True:
             else:
                 if reward>=0:
                     point=point+1
-                e=0
+                e=1
                 for i in range(len(white)-1,-1,-1):
                     q_data[white[i][0],white[i][1],white[i][2],white[i][3],white[i][4],white[i][5],white[i][6]]=q_data[white[i][0],white[i][1],white[i][2],white[i][3],white[i][4],white[i][5],white[i][6]]-reward*e
                     e=e/10

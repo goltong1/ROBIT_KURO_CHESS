@@ -125,6 +125,7 @@ while not done:
             while reward ==-1:
                 bests.remove(best_index)
                 if bests==[]:
+                    print("random")
                     for piece in range(0,16):
                         if piece==0:
                             bests=[]

@@ -4,8 +4,8 @@ from chess_engine import*
 board=[[32 for col in range(8)] for row in range(8)]
 
 
-#q_data=np.load("E:\chess_ai_data\\test2.npy")
-q_data=np.zeros((17,8,8,17,8,8,32,8,8))
+q_data=np.load("E:\chess_ai_data\\test2.npy")
+#q_data=np.zeros((17,8,8,17,8,8,32,8,8))
 cnt=0
 print("start")
 for y in range(0,8):
@@ -27,7 +27,7 @@ point=0
 white_previous=[16,0,0]
 black_previous=[16,0,0]
 while True:
-    if gamecount>5000:
+    if gamecount>10000:
         break;
     if white!=[]:
         white_previous=[white[len(white)-1][6]-16,white[len(white)-1][7],white[len(white)-1][8]]
@@ -37,40 +37,34 @@ while True:
         if piece==16:
             best=q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],piece,0,0]
             bests=[]
+            bests.append([16,0,0])
         for x in range(0,8):
-            if find(board,piece)[0]==-1:
+            if find(board,abs(piece))[0]==-1:
                 break;
             for y in range(0,8):
-                
-                if piece==16 and x==0 and y==0:
-                    best=q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],piece,0,0]
-                    bests=[]
-                    bests.append([piece,x,y])
-                elif q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],piece,x,y]>best:
+                if q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],piece,x,y]>best:
                     best=q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],piece,x,y]
                     bests=[]
                     bests.append([piece,x,y])
                 elif q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],piece,x,y]==best:
                     bests.append([piece,x,y])
                 """
-                if q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],piece,x,y]>-99999:
-                    bests.append([piece,x,y])
+                bests.append([piece,x,y])
                 """
     best_index=choice(bests)
     reward=move(board,best_index[0],best_index[1],best_index[2])
     
     while reward==-1:
         bests.remove(best_index)
+        q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],best_index[0],best_index[1],best_index[2]]=q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],best_index[0],best_index[1],best_index[2]]-9999
         if bests==[]:
             print('miss')
             break;
-        q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],best_index[0],best_index[1],best_index[2]]=q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],best_index[0],best_index[1],best_index[2]]-99999
         best_index=choice(bests)
         reward=move(board,best_index[0],best_index[1],best_index[2])
 
     
     if reward==-1:
-        q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],best_index[0],best_index[1],best_index[2]]=q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],best_index[0],best_index[1],best_index[2]]-99999
         gameover=1
     else:
         white.append([white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],best_index[0],best_index[1],best_index[2]])
@@ -98,40 +92,34 @@ while True:
                 if piece==0:
                     best=q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],piece,0,0]
                     bests=[]
+                    bests.append([0,0,0])
                 for x in range(0,8):
-                    if find(board,piece)[0]==-1:
+                    if find(board,abs(piece))[0]==-1:
                         break;
                     for y in range(0,8):
-                        
-                        if piece==0 and x==0 and y==0:
-                            best=q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],piece,0,0]
-                            bests=[]
-                            bests.append([piece,x,y])
-                        elif q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],piece,x,y]>best:
+                        if q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],piece,x,y]>best:
                             best=q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],piece,x,y]
                             bests=[]
                             bests.append([piece,x,y])
                         elif q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],piece,x,y]==best:
                             bests.append([piece,x,y])
-                        """
-                        if q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],piece,x,y]>-99999:
-                            bests.append([piece,x,y])
+                        """            
+                        bests.append([piece,x,y])
                         """
             best_index=choice(bests)
             reward=move(board,best_index[0],best_index[1],best_index[2])
             while reward==-1:
                 bests.remove(best_index)
+                q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],best_index[0],best_index[1],best_index[2]]=q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],best_index[0],best_index[1],best_index[2]]-9999
                 if bests==[]:
                     print('miss')
                     break;
-                q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],best_index[0],best_index[1],best_index[2]]=q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],best_index[0],best_index[1],best_index[2]]-99999
                 best_index=choice(bests)
                 reward=move(board,best_index[0],best_index[1],best_index[2])
                 
 
             
             if reward==-1:
-                q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],best_index[0],best_index[1],best_index[2]]=q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],best_index[0],best_index[1],best_index[2]]-99999
                 gameover=1
             else:
                 black.append([white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],best_index[0],best_index[1],best_index[2]])

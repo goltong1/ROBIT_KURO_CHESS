@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>cbcfd987-ee3c-42e5-8ec7-aadfb10402ad</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Chess_GUI_Player.py</StartupFile>
+    <StartupFile>Chess_GUI_PVP.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -23,6 +23,9 @@
   <ItemGroup>
     <Compile Include="Chess_ai_Blank.py" />
     <Compile Include="Chess_ai_Blank_2.0.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chess_ai_MDP.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="chess_engine.py">
