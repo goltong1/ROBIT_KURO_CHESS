@@ -23,12 +23,17 @@ gamecount=0
 white=[]
 black=[]
 gameover=0
+
+
+point=0
 while True:
- 
     if gamecount>10000:
         break;
     field_index=read_field(board)
     for piece in range(16,32):
+        if piece==16:
+            best=best=q_data[field_index[0],field_index[1],field_index[2],field_index[3],piece,0,0]
+            bests=[]
         for x in range(0,8):
             if find(board,piece)[0]==-1:
                 break;
@@ -43,18 +48,34 @@ while True:
                     bests.append([piece,x,y])
                 elif q_data[field_index[0],field_index[1],field_index[2],field_index[3],piece,x,y]==best:
                     bests.append([piece,x,y])
+                """
+                if q_data[field_index[0],field_index[1],field_index[2],field_index[3],piece,x,y]>-9999:
+                    bests.append([piece,x,y])
+                    """
     best_index=choice(bests)
     white.append([field_index[0],field_index[1],field_index[2],field_index[3],best_index[0],best_index[1],best_index[2]])
     reward=move(board,best_index[0],best_index[1],best_index[2])
+    """
+    while reward==-1:
+        q_data[field_index[0],field_index[1],field_index[2],field_index[3],best_index[0],best_index[1],best_index[2]]=q_data[field_index[0],field_index[1],field_index[2],field_index[3],best_index[0],best_index[1],best_index[2]]-99999
+        best_index=choice(bests)
+        reward=move(board,best_index[0],best_index[1],best_index[2])
+        if reward==-1:
+            bests.remove(best_index)
+            if bests==[]:
+                break;
+    """
     if reward==-1:
-        q_data[field_index[0],field_index[1],field_index[2],field_index[3],best_index[0],best_index[1],best_index[2]]=q_data[field_index[0],field_index[1],field_index[2],field_index[3],best_index[0],best_index[1],best_index[2]]-9999
+        q_data[field_index[0],field_index[1],field_index[2],field_index[3],best_index[0],best_index[1],best_index[2]]=q_data[field_index[0],field_index[1],field_index[2],field_index[3],best_index[0],best_index[1],best_index[2]]-99999
         gameover=1
     else:
+        if reward>=0:
+            point=point+1
         e=1
         for i in range(len(white)-1,-1,-1):
             q_data[white[i][0],white[i][1],white[i][2],white[i][3],white[i][4],white[i][5],white[i][6]]=q_data[white[i][0],white[i][1],white[i][2],white[i][3],white[i][4],white[i][5],white[i][6]]+reward*e
             e=e/10
-        e=1
+        e=0
         for i in range(len(black)-1,-1,-1):
             q_data[black[i][0],black[i][1],black[i][2],black[i][3],black[i][4],black[i][5],black[i][6]]=q_data[black[i][0],black[i][1],black[i][2],black[i][3],black[i][4],black[i][5],black[i][6]]-reward*e
             e=e/10
@@ -65,10 +86,14 @@ while True:
         else:
             field_index=read_field(board)
             for piece in range(0,16):
+                if piece==0:
+                    best=best=q_data[field_index[0],field_index[1],field_index[2],field_index[3],piece,0,0]
+                    bests=[]
                 for x in range(0,8):
                     if find(board,piece)[0]==-1:
                         break;
                     for y in range(0,8):
+                        
                         if piece==0 and x==0 and y==0:
                             best=q_data[field_index[0],field_index[1],field_index[2],field_index[3],piece,0,0]
                             bests=[]
@@ -79,14 +104,31 @@ while True:
                             bests.append([piece,x,y])
                         elif q_data[field_index[0],field_index[1],field_index[2],field_index[3],piece,x,y]==best:
                             bests.append([piece,x,y])
+                        """
+                        if q_data[field_index[0],field_index[1],field_index[2],field_index[3],piece,x,y]>-9999:
+                            bests.append([piece,x,y])
+                        """
+
             best_index=choice(bests)
             black.append([field_index[0],field_index[1],field_index[2],field_index[3],best_index[0],best_index[1],best_index[2]])
             reward=move(board,best_index[0],best_index[1],best_index[2])
+            """
+            while reward==-1:
+                q_data[field_index[0],field_index[1],field_index[2],field_index[3],best_index[0],best_index[1],best_index[2]]=q_data[field_index[0],field_index[1],field_index[2],field_index[3],best_index[0],best_index[1],best_index[2]]-99999
+                best_index=choice(bests)
+                reward=move(board,best_index[0],best_index[1],best_index[2])
+                if reward==-1:
+                    bests.remove(best_index)
+                    if bests==[]:
+                        break;
+            """
             if reward==-1:
-                q_data[field_index[0],field_index[1],field_index[2],field_index[3],best_index[0],best_index[1],best_index[2]]=q_data[field_index[0],field_index[1],field_index[2],field_index[3],best_index[0],best_index[1],best_index[2]]-9999
+                q_data[field_index[0],field_index[1],field_index[2],field_index[3],best_index[0],best_index[1],best_index[2]]=q_data[field_index[0],field_index[1],field_index[2],field_index[3],best_index[0],best_index[1],best_index[2]]-99999
                 gameover=1
             else:
-                e=1
+                if reward>=0:
+                    point=point+1
+                e=0
                 for i in range(len(white)-1,-1,-1):
                     q_data[white[i][0],white[i][1],white[i][2],white[i][3],white[i][4],white[i][5],white[i][6]]=q_data[white[i][0],white[i][1],white[i][2],white[i][3],white[i][4],white[i][5],white[i][6]]-reward*e
                     e=e/10
@@ -94,11 +136,14 @@ while True:
                 for i in range(len(black)-1,-1,-1):
                     q_data[black[i][0],black[i][1],black[i][2],black[i][3],black[i][4],black[i][5],black[i][6]]=q_data[black[i][0],black[i][1],black[i][2],black[i][3],black[i][4],black[i][5],black[i][6]]+reward*e
                     e=e/10
+                    
                 if reward>=1000:
                     print("black win!")
                     gameover=1
                     break;
-    if gameover==1:
+                    
+    if gameover==1 or point>500:
+        point=0
         gameover=0
         gamecount=gamecount+1
         #print(white)
@@ -109,7 +154,6 @@ while True:
         print(best_index)
         field_index=read_field(board)
         print(field_index)
-        
         for y in range(0,8):
             for x in range(0,8):
                 if abs(board[y][x])>7 and abs(board[y][x])<=15:

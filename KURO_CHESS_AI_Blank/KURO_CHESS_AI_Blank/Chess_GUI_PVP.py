@@ -1,9 +1,9 @@
+
 import pygame
 from chess_engine import*
 import numpy as np
 from random import*
 import time
-q_data=np.load("test1.npy")
 SCREEN_WIDTH=800
 SCREEN_HEIGHT=800
 pygame.init()
@@ -55,67 +55,47 @@ for y in range(0,8):
 done=False
 white=[]
 black=[]
+turn=True
+clicked=False
 gameover=0
+now_x=0
+now_y=0
+move_x=0
+move_y=0
 while not done:
-    field_index=read_field(board)
-    for piece in range(16,32):
-        if piece==16:
-            best=best=q_data[field_index[0],field_index[1],field_index[2],field_index[3],piece,0,0]
-            bests=[]
-        for x in range(0,8):
-            if find(board,piece)[0]==-1:
-                break;
-            for y in range(0,8):
-                if piece==16 and x==0 and y==0:
-                    best=q_data[field_index[0],field_index[1],field_index[2],field_index[3],piece,0,0]
-                    bests=[]
-                    bests.append([piece,x,y])
-                elif q_data[field_index[0],field_index[1],field_index[2],field_index[3],piece,x,y]>best:
-                    best=q_data[field_index[0],field_index[1],field_index[2],field_index[3],piece,x,y]
-                    bests=[]
-                    bests.append([piece,x,y])
-                elif q_data[field_index[0],field_index[1],field_index[2],field_index[3],piece,x,y]==best:
-                    bests.append([piece,x,y])
-    best_index=choice(bests)
-    
-    reward=move(board,best_index[0],best_index[1],best_index[2])
-    while reward ==-1:
-        reward=move(board,best_index[0],best_index[1],best_index[2])
-    if reward>=1000:
-        print("white win!")
-        gameover=1
-    else:
-        field_index=read_field(board)
-        for piece in range(0,16):
-            if piece==0:
-                best=best=q_data[field_index[0],field_index[1],field_index[2],field_index[3],piece,0,0]
-                bests=[]
-            for x in range(0,8):
-                if find(board,piece)[0]==-1:
-                    break;
-                for y in range(0,8):
-                    if piece==0 and x==0 and y==0:
-                        best=q_data[field_index[0],field_index[1],field_index[2],field_index[3],piece,0,0]
-                        bests=[]
-                        bests.append([piece,x,y])
-                    elif q_data[field_index[0],field_index[1],field_index[2],field_index[3],piece,x,y]>best:
-                        best=q_data[field_index[0],field_index[1],field_index[2],field_index[3],piece,x,y]
-                        bests=[]
-                        bests.append([piece,x,y])
-                    elif q_data[field_index[0],field_index[1],field_index[2],field_index[3],piece,x,y]==best:
-                        bests.append([piece,x,y])
-        best_index=choice(bests)
-        reward=move(board,best_index[0],best_index[1],best_index[2])
-        while reward ==-1:
-            best_index=choice(bests)
-            reward=move(board,best_index[0],best_index[1],best_index[2])
-        black.append([field_index[0],field_index[1],field_index[2],field_index[3],best_index[0],best_index[1],best_index[2]])
-        if reward>=1000:
-            print("black win!")
-            gameover=1
     for event in pygame.event.get():# User did something
         if event.type == pygame.QUIT:# If user clicked close
             done=True # Flag that we are done so we exit this loop
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if turn and not(clicked):
+                now_x = event.pos[0]//100
+                now_y = event.pos[1]//100
+                if piece_exist(board,now_x,now_y)>15 and piece_exist(board,now_x,now_y)<32:
+                    clicked=True
+            elif turn and clicked:
+                move_x = event.pos[0]//100
+                move_y = event.pos[1]//100
+                reward=move(board,abs(board[int(now_y)][int(now_x)]),int(move_x),int(move_y))
+                if reward!=-1:
+                    turn=False
+                else:
+                    print("wrong position!")
+                clicked=False
+            elif turn==False and not(clicked):
+                now_x = event.pos[0]//100
+                now_y = event.pos[1]//100
+                if piece_exist(board,now_x,now_y)>=0 and piece_exist(board,now_x,now_y)<16:
+                    clicked=True
+            elif turn==False and clicked:
+                move_x = event.pos[0]//100
+                move_y = event.pos[1]//100
+                reward=move(board,abs(board[int(now_y)][int(now_x)]),int(move_x),int(move_y))
+                if reward!=-1:
+                    turn=True
+                else:
+                    print("wrong position!")
+                clicked=False
+
     SCREEN.fill(WHITE)
     for x in range(0,8):
         for y in range(0,8):
@@ -165,9 +145,10 @@ while not done:
     #clock.tick(60)
     if gameover==1:
         done=True
-        print(white)
-        print(black)
         break;
 
     time.sleep(1)
 pygame.quit()
+    
+np.save("test1",q_data) 
+

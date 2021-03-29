@@ -19,9 +19,9 @@ def move(board,piece,move_x,move_y):
             return 3
         elif die_piece==0 or die_piece==7 or die_piece==24 or die_piece==31:
             return 5
-        elif die_piece==3 or die_piece==28:
+        elif die_piece==3 or die_piece==27:
             return 9
-        elif die_piece==4 or die_piece==27:
+        elif die_piece==4 or die_piece==28:
             return 1000
         else:
             return 0
@@ -123,13 +123,13 @@ def bishop_check(board,now_x,now_y,move_x,move_y,WB):
                     check_x=check_x-1
                     check_y=check_y+1
             elif move_x<now_x and move_y<now_y:
-                check_x=move_x-1
-                check_y=move_y-1
+                check_x=move_x+1
+                check_y=move_y+1
                 while check_x!=now_x and check_y!=now_y:
                     if board[check_y][check_x]!=32:
                         break;
-                    check_x=check_x-1
-                    check_y=check_y-1
+                    check_x=check_x+1
+                    check_y=check_y+1
             if check_x==now_x and check_y==now_y:
                 return 1
             else:
@@ -211,6 +211,12 @@ def find(board,piece):
                 return result
 
     return result
+
+def piece_exist(board,x,y):
+    if board[y][x]!=32:
+        return abs(board[y][x])
+    else:
+        return -1
 def read_field(board):
     field_index=[0,0,0,0]
     for y in range(0,8):
