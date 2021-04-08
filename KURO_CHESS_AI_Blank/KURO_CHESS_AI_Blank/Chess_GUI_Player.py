@@ -4,7 +4,7 @@ import numpy as np
 from random import*
 import time
 
-q_data=np.load("E:\chess_ai_data\\test2.npy")
+q_data=np.load("E:\chess_ai_data\\test3.npy")
 SCREEN_WIDTH=800
 SCREEN_HEIGHT=800
 pygame.init()
@@ -66,6 +66,10 @@ white_previous=[16,0,0]
 black_previous=[16,0,0]
 gameover=0
 while not done:
+    if turn:
+        e_b=-1
+    else:
+        e_b=1
     for event in pygame.event.get():# User did something
         if event.type == pygame.QUIT:# If user clicked close
             done=True # Flag that we are done so we exit this loop
@@ -85,10 +89,6 @@ while not done:
                     black_previous=[black[len(black)-1][6],black[len(black)-1][7],black[len(black)-1][8]]
                 if reward!=-1:
                     turn=False
-                    e=1
-                    for i in range(len(black)-1,-1,-1):
-                        q_data[black[i][0],black[i][1],black[i][2],black[i][3],black[i][4],black[i][5],black[i][6],black[i][7],black[i][8]]=q_data[black[i][0],black[i][1],black[i][2],black[i][3],black[i][4],black[i][5],black[i][6],black[i][7],black[i][8]]-reward*e
-                        e=e/10
                     white.append([white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],abs(board[int(now_y)][int(now_x)]),int(move_x),int(move_y)])
                 else:
                     print("wrong position!")
@@ -102,54 +102,24 @@ while not done:
                 white_previous=[white[len(white)-1][6]-16,white[len(white)-1][7],white[len(white)-1][8]]
             if black!=[]:
                 black_previous=[black[len(black)-1][6],black[len(black)-1][7],black[len(black)-1][8]]
+            bests=[]
             for piece in range(0,16):
-                if piece==0:
-                    best=q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],piece,0,0]
-                    bests=[]
+                now=find(board,abs(piece))
                 for x in range(0,8):
-                    if find(board,piece)[0]==-1:
+                    if now[0]==-1:
                         break;
                     for y in range(0,8):
-                        if piece==0 and x==0 and y==0:
-                            best=q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],piece,0,0]
-                            bests=[]
-                            bests.append([piece,x,y])
-                        elif q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],piece,x,y]>best:
-                            best=[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],piece,x,y]
-                            bests=[]
-                            bests.append([piece,x,y])
-                        elif q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],piece,x,y]==best:
-                            bests.append([piece,x,y])
-            best_index=choice(bests)
+                        if check(board,piece,now[0],now[1],x,y):
+                            bests.append([piece,x,y,q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],piece,x,y]])
+            bests.sort(key=lambda x:x[3])
+            bests.reverse()
+            print(bests)
+            best_index=bests[0]
             reward=move(board,best_index[0],best_index[1],best_index[2])
-            while reward ==-1:
-                bests.remove(best_index)
-                if bests==[]:
-                    print("random")
-                    for piece in range(0,16):
-                        if piece==0:
-                            bests=[]
-                        for x in range(0,8):
-                            if find(board,piece)[0]==-1:
-                                break;
-                            for y in range(0,8):
-                                if q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],piece,x,y]>-9999:
-                                    bests.append([piece,x,y])
-                    while reward==-1:
-                        best_index=choice(bests)
-                        reward=move(board,best_index[0],best_index[1],best_index[2])
-                    break;
-                q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],best_index[0],best_index[1],best_index[2]]=q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],best_index[0],best_index[1],best_index[2]]-99999
-                best_index=choice(bests)
-                reward=move(board,best_index[0],best_index[1],best_index[2])
             black.append([white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],best_index[0],best_index[1],best_index[2]])
-            e=1
-            for i in range(len(black)-1,-1,-1):
-                q_data[black[i][0],black[i][1],black[i][2],black[i][3],black[i][4],black[i][5],black[i][6],black[i][7],black[i][8]]=q_data[black[i][0],black[i][1],black[i][2],black[i][3],black[i][4],black[i][5],black[i][6],black[i][7],black[i][8]]+reward*e
-                e=e/10
             if reward>=1000:
-                print("black win!")
-                gameover=1    
+                print('black win!')
+                gameover=1
             turn=True;
 
     SCREEN.fill(WHITE)
@@ -206,5 +176,5 @@ while not done:
     time.sleep(1)
 pygame.quit()
     
-np.save("test1",q_data) 
+np.save("E:\chess_ai_data\\test3",q_data) 
 

@@ -37,6 +37,19 @@ def predict_next(data,dic):
         return random.choice(list(keys))
     w1,w2=s
     return random.choice(list(dic[w1][w2].keys()))
+def predict_next(data,dic):
+    if len(data)>=2:
+        s=data[len(data)-2:len(data)]
+    elif len(data)==1:
+        s=data[0]
+        keys=dic[s].keys()
+        return random.choice(list(keys))
+    else:
+        keys=dic['@'].keys()
+        return random.choice(list(keys))
+    w1,w2=s
+    return random.choice(list(dic[w1][w2].keys()))
+"""
 data=pd.read_csv('data.csv')
 chess_datas=[]
 for x in range(0,len(data['PGN'])):
@@ -51,4 +64,6 @@ for x in chess_datas:
     make_dic(x,dic)
 print('complete!')
 print(predict_next([],dic))
-json.dump(dic,open(dic,"w",encoding="utf-8"))
+with open("./chess_data.json", 'w') as outfile:
+    json.dump(dic,outfile)
+"""

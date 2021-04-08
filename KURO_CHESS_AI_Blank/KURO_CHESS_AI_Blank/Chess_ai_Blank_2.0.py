@@ -1,5 +1,5 @@
 import numpy as np
-from random import*
+from random import* 
 from chess_engine import*
 board=[[32 for col in range(8)] for row in range(8)]
 
@@ -27,7 +27,7 @@ point=0
 white_previous=[16,0,0]
 black_previous=[16,0,0]
 while True:
-    if gamecount>10000:
+    if gamecount>100000:
         break;
     if white!=[]:
         white_previous=[white[len(white)-1][6]-16,white[len(white)-1][7],white[len(white)-1][8]]
@@ -42,6 +42,7 @@ while True:
             if find(board,abs(piece))[0]==-1:
                 break;
             for y in range(0,8):
+                """
                 if q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],piece,x,y]>best:
                     best=q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],piece,x,y]
                     bests=[]
@@ -50,7 +51,7 @@ while True:
                     bests.append([piece,x,y])
                 """
                 bests.append([piece,x,y])
-                """
+                
     best_index=choice(bests)
     reward=move(board,best_index[0],best_index[1],best_index[2])
     
@@ -84,9 +85,9 @@ while True:
             #break;
         else:
             if white!=[]:
-                white_previous=white[len(white)-1]
+                white_previous=[white[len(white)-1][6]-16,white[len(white)-1][7],white[len(white)-1][8]]
             if black!=[]:
-                black_previous=black[len(black)-1]
+                black_previous=[black[len(black)-1][6],black[len(black)-1][7],black[len(black)-1][8]]
             field_index=read_field(board)
             for piece in range(0,16):
                 if piece==0:
@@ -97,13 +98,14 @@ while True:
                     if find(board,abs(piece))[0]==-1:
                         break;
                     for y in range(0,8):
+                        
                         if q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],piece,x,y]>best:
                             best=q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],piece,x,y]
                             bests=[]
                             bests.append([piece,x,y])
                         elif q_data[white_previous[0],white_previous[1],white_previous[2],black_previous[0],black_previous[1],black_previous[2],piece,x,y]==best:
                             bests.append([piece,x,y])
-                        """            
+                        """       
                         bests.append([piece,x,y])
                         """
             best_index=choice(bests)

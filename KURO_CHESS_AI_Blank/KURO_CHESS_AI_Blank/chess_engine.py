@@ -6,29 +6,31 @@ def move(board,piece,move_x,move_y):
     if move_x>7 or move_x<0 or move_y>7 or move_y<0:
         return -1
     if check(board,piece,now_x,now_y,move_x,move_y):
+        piece=board[now_y][now_x]
         board[now_y][now_x]=32
         die_piece=board[move_y][move_x]
         if (piece>7 and piece<=15 and move_y==7) or (piece>15 and piece<24 and move_y==0):
             piece=piece*-1
         board[move_y][move_x]=piece
-        if 7<die_piece and die_piece<24:
-            return 1
-        elif die_piece==1 or die_piece==6 or die_piece==25 or die_piece==30:
-            return 3
-        elif die_piece==2 or die_piece==5 or die_piece==26 or die_piece==29:
-            return 3
-        elif die_piece==0 or die_piece==7 or die_piece==24 or die_piece==31:
-            return 5
-        elif die_piece==3 or die_piece==27:
-            return 9
-        elif die_piece==4 or die_piece==28:
-            return 1000
-        else:
-            return 0
+        return reward_calculation(die_piece)
 
     else:
         return -1
-    
+def reward_calculation(die_piece):
+    if 7<die_piece and die_piece<24:
+        return 1
+    elif die_piece==1 or die_piece==6 or die_piece==25 or die_piece==30:
+        return 3
+    elif die_piece==2 or die_piece==5 or die_piece==26 or die_piece==29:
+        return 3
+    elif die_piece==0 or die_piece==7 or die_piece==24 or die_piece==31:
+        return 5
+    elif die_piece==3 or die_piece==27:
+        return 9
+    elif die_piece==4 or die_piece==28:
+        return 1000
+    else:
+        return 0
 def check(board,piece,now_x,now_y,move_x,move_y):
     if now_x==-1 or (now_x==move_x and now_y==move_y)or move_x>7 or move_y>7:
         return 0
@@ -212,6 +214,58 @@ def find(board,piece):
 
     return result
 
+def castling(board,king,rook):
+    if find(board,king)[0]!=-1 and find(board,rook)[0]!=-1:
+        cord_k=find(board,king)
+        cord_r=find(board,rook)
+        if king>15 and rook>15 and cord_k==[4,7] and (cord_r==[0,7] or cord_r==[7,7]):
+            if cord_k[0]>cord_r[0]:
+                side=1
+                cord_chk=[0,7]
+            else:
+                side=0
+                cord_chk=[7,7]
+            while True:
+                cord_chk[0]=int(cord_chk[0]+abs(cord_k[0]-cord_r[0])/(cord_k[0]-cord_r[0]))
+                if board[cord_chk[1]][cord_chk[0]]<32:
+                    if cord_chk==cord_k:
+                        board[cord_k[1]][cord_k[0]]=32
+                        board[cord_r[1]][cord_r[0]]=32
+                        if side:
+                            board[7][2]=king
+                            board[7][3]=rook
+                        else:
+                            board[7][6]=king
+                            board[7][5]=rook
+                        return 1
+                    break;
+
+        elif king<16 and rook<16 and cord_k==[4,0] and (cord_r==[0,0] or cord_r==[7,0]):
+            if cord_k[0]>cord_r[0]:
+                side=1
+                cord_chk=[0,0]
+            else:
+                side=0
+                cord_chk=[7,0]
+            while True:
+                cord_chk[0]=int(cord_chk[0]+abs(cord_k[0]-cord_r[0])/(cord_k[0]-cord_r[0]))
+                if board[cord_chk[1]][cord_chk[0]]<32:
+                    if cord_chk==cord_k:
+                        board[cord_k[1]][cord_k[0]]=32
+                        board[cord_r[1]][cord_r[0]]=32
+                        if side:
+                            board[0][2]=king
+                            board[0][3]=rook
+                        else:
+                            board[0][6]=king
+                            board[0][5]=rook
+                        return 1
+                    break;
+
+        else:
+            return 0
+    return 0
+        
 def piece_exist(board,x,y):
     if board[y][x]!=32:
         return abs(board[y][x])

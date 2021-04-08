@@ -1,9 +1,17 @@
-
+import json
+import random
+from Chess_ai_MDP import*
 import pygame
 from chess_engine import*
 import numpy as np
 from random import*
+from chess_notation_interpreter import*
 import time
+print('file load..')
+file_path = "./chess_data.json"
+with open(file_path, "r") as json_file:
+    json_data = json.load(json_file)
+print('loading complete.')
 SCREEN_WIDTH=800
 SCREEN_HEIGHT=800
 pygame.init()
@@ -13,7 +21,7 @@ WHITE= (255,255,255)
 BLUE = ( 0,  0,255)
 GREEN= ( 0,255,  0)
 RED  = (255,  0,  0)
-pygame.display.set_caption("CHESS_Blank")
+pygame.display.set_caption("CHESS_MDP")
 
 clock = pygame.time.Clock()
 
@@ -53,18 +61,16 @@ for y in range(0,8):
             board[y][x]=cnt
             cnt=cnt+1 
 done=False
-white=[]
-black=[]
+notation_data=[]
 turn=True
 clicked=False
-gameover=0
 now_x=0
 now_y=0
 move_x=0
 move_y=0
-castling_w=[1,1,1]
-castling_b=[1,1,1]
-
+white_previous=[16,0,0]
+black_previous=[16,0,0]
+gameover=0
 while not done:
     for event in pygame.event.get():# User did something
         if event.type == pygame.QUIT:# If user clicked close
@@ -81,62 +87,26 @@ while not done:
                 reward=move(board,abs(board[int(now_y)][int(now_x)]),int(move_x),int(move_y))
                 if reward!=-1:
                     turn=False
-                    if board[move_y][move_x]==28:
-                        castling_w[0]=0
-                    elif board[move_y][move_x]==24:
-                        castling_w[1]=0
-                    elif board[move_y][move_x]==31:
-                        castling_w[2]=0
+                    notation_data.append(cord_to_notation(abs(board[int(now_y)][int(now_x)]),move_x,move_y))
                 else:
-                    if (board[now_y][now_x]==28 and castling_w[0]) and ((board[move_y][move_x]==24 and castling_w[1]) or (board[move_y][move_x]==31 and castling_w[2])):
-                        castling_pieces=[board[now_y][now_x],board[move_y][move_x]]
-                        if castling(board,board[now_y][now_x],board[move_y][move_x]):
-                            turn=False
-                            if castling_pieces[0]==28:
-                                castling_w[0]=0
-                            if castling_pieces[1]==24:
-                                castling_w[1]=0
-                            elif castling_pieces[1]==31:
-                                castling_w[2]=0
-                        else:
-                            print("wrong position!")
-                    else:
-                        print("wrong position!")
+                    print("wrong position!")
                 clicked=False
-            elif turn==False and not(clicked):
-                now_x = event.pos[0]//100
-                now_y = event.pos[1]//100
-                if piece_exist(board,now_x,now_y)>=0 and piece_exist(board,now_x,now_y)<16:
-                    clicked=True
-            elif turn==False and clicked:
-                move_x = event.pos[0]//100
-                move_y = event.pos[1]//100
-                reward=move(board,abs(board[int(now_y)][int(now_x)]),int(move_x),int(move_y))
-                if reward!=-1:
-                    turn=True
-                    if board[move_y][move_x]==4:
-                        castling_b[0]=0
-                    elif board[move_y][move_x]==0:
-                        castling_b[1]=0
-                    elif board[move_y][move_x]==7:
-                        castling_b[2]=0
-                else:
-                    if (board[now_y][now_x]==4 and castling_b[0]) and ((board[move_y][move_x]==0 and castling_b[1]) or (board[move_y][move_x]==7 and castling_b[2])):
-                        castling_pieces=[board[now_y][now_x],board[move_y][move_x]]
-                        if castling(board,board[now_y][now_x],board[move_y][move_x]):
-                            turn=True
-                            if castling_pieces[0]==4:
-                                castling_b[0]=0
-                            if castling_pieces[1]==0:
-                                castling_b[1]=0
-                            elif castling_pieces[1]==71:
-                                castling_b[2]=0
-                        else:
-                            print("wrong position!")
-
-                    else:
-                        print("wrong position!")
-                clicked=False
+    if turn!=True:
+        if reward>=1000:
+            print("white win!")
+            gameover=1
+        else:
+            move_arr=notation_to_cord(predict_next(notation_data,json_data),turn,board)
+            while move_arr[0]!='move':
+                move_arr=notation_to_cord(predict_next(notation_data,json_data),turn,board)
+            reward=move(board,move_arr[1],move_arr[2],move_arr[3])
+            while reward ==-1:
+                reward=move(board,move_arr[1],move_arr[2],move_arr[3])
+            notation_data.append(predict_next(notation_data,json_data))
+            if reward>=1000:
+                print("black win!")
+                gameover=1    
+            turn=True;
 
     SCREEN.fill(WHITE)
     for x in range(0,8):

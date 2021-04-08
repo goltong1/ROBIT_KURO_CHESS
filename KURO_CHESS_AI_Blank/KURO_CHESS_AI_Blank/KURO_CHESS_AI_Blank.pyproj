@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>cbcfd987-ee3c-42e5-8ec7-aadfb10402ad</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Chess_GUI_PVP.py</StartupFile>
+    <StartupFile>Chess_ai_minimax_gui.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -25,7 +25,19 @@
     <Compile Include="Chess_ai_Blank_2.0.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Chess_ai_Blank_3.0.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Chess_ai_MDP.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="chess_ai_MDP_GUI.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chess_ai_MiniMaxWithBlank.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chess_ai_minimax_gui.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="chess_engine.py">
@@ -38,6 +50,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Chess_GUI_PVP.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="chess_notation_interpreter.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
