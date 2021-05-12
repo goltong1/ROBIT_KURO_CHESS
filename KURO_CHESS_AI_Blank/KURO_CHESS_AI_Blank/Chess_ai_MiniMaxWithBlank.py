@@ -24,7 +24,7 @@ def find_best_move(board,turn,n,white_p,black_p):
     for case in cases:
         tmp_board=copy.deepcopy(board)
         reward=move(tmp_board,case[0],case[1],case[2])
-        if n%2==0 and reward>=5:
+        if n%2==0 and reward>9:
             return case
         elif n%2==1 and reward>100:
             return case

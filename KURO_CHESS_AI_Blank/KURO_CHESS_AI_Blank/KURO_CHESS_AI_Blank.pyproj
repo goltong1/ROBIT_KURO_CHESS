@@ -4,13 +4,14 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>cbcfd987-ee3c-42e5-8ec7-aadfb10402ad</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Chess_ai_minimax_gui.py</StartupFile>
+    <StartupFile>Chess_ai_Cloud.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>KURO_CHESS_AI_Blank</Name>
     <RootNamespace>KURO_CHESS_AI_Blank</RootNamespace>
+    <InterpreterId>CondaEnv|CondaEnv|Anaconda3</InterpreterId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -26,6 +27,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Chess_ai_Blank_3.0.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chess_ai_Cloud.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Chess_ai_MDP.py">
@@ -55,6 +59,9 @@
     <Compile Include="chess_notation_interpreter.py">
       <SubType>Code</SubType>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="CondaEnv|CondaEnv|Anaconda3" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

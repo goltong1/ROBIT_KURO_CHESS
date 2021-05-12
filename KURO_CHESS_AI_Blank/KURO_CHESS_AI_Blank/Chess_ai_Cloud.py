@@ -1,53 +1,25 @@
 
+
 import pygame
 from chess_engine import*
 import numpy as np
 from random import*
 import time
 import copy
-def random_piece_move(board,piece):
-    cases=[]
-    now=find(board,abs(piece))
-    for x in range(0,8):
-        for y in range(0,8):
-            if check(board,piece,now[0],now[1],x,y):
-                cases.append([piece,x,y])
-    return choice(cases)
-def find_best_move(board,turn,n):
-    if turn:
-        piece_h=16
-    else:
-        piece_h=0
-    cases=[]
-    for piece in range(piece_h,piece_h+16):
-        now=find(board,abs(piece))
-        for x in range(0,8):
-            if now[0]==-1:
-                break;
-            for y in range(0,8):
-                if check(board,piece,now[0],now[1],x,y):
-                    cases.append([piece,x,y])
-    best=-10000
-    bests=[]
-    for case in cases:
-        tmp_board=copy.deepcopy(board)
-        reward=move(tmp_board,case[0],case[1],case[2])
-        if turn and reward>4:
-            return case
-        if n<3:
-            next_best=find_best_move(tmp_board,not(turn),n+1)
-            reward=reward-move(tmp_board,next_best[0],next_best[1],next_best[2])
-        if reward>best:
-            best_index=case
-            best=reward
-            bests=[]
-            bests.append(case)
-        elif reward==best:
-            bests.append(case)
-    best_index=choice(bests)
-    if n==1:
-        print(best)
-    return best_index
+import asyncio
+import websockets
+import json
+best=[0,0,0]
+async def find_best_move(board,turn,n):
+    dic=dict(board=board,turn=turn,n=n)
+    dic=json.dumps(dic)
+    async with websockets.connect('ws://' + 'kuro-chess-ai.azurewebsites.net//ws/') as websocket:
+        global best
+        await websocket.send(dic)
+        data_rcv=await websocket.recv()
+        print(data_rcv)
+        best=json.loads(data_rcv)
+        return best
 SCREEN_WIDTH=800
 SCREEN_HEIGHT=800
 pygame.init()
@@ -160,34 +132,7 @@ while not done:
                 print("white win!")
                 gameover=1
             else:
-                if count==0:
-                    if previous==[20,4,4]:
-                        best=[12,4,3]
-                        opening=True
-                    elif previous==[19,3,4]:
-                        best=[11,3,3]
-                        opening=True
-                    elif previous[0]==25 or previous[0]==30:
-                        knight=choice([1,6])
-                        best=random_piece_move(board,knight)
-                    else:
-                        best=[12,4,3]
-                        my_face=True
-                elif count<2:
-                    if opening:
-                        if previous[0]==25 or previous[0]==30:
-                            knight=choice([1,6])
-                            best=random_piece_move(board,knight)
-                        elif previous==[19,3,5]:
-                            best=[11,3,2]
-                        else:
-                            best=find_best_move(board,turn,3)
-                    elif my_face:
-                        best=[11,3,2]
-                    else:
-                        best=find_best_move(board,turn,3)
-                else:
-                    best=find_best_move(board,turn,1)
+                asyncio.get_event_loop().run_until_complete(find_best_move(board,turn,1))
                 reward=move(board,best[0],best[1],best[2])
                 count=count+1
                 if reward>=1000:
