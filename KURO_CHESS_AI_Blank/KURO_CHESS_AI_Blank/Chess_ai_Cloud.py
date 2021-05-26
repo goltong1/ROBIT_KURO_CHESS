@@ -13,14 +13,16 @@ best=[0,0,0]
 async def find_best_move(board,turn,n):
     dic=dict(board=board,turn=turn,n=n)
     dic=json.dumps(dic)
-    async with websockets.connect('ws://' + 'kuro-chess-ai.azurewebsites.net//ws/') as websocket:
+    print(dic)
+    async with websockets.connect('ws://' + 'kuro-chess-ai.azurewebsites.net/ws/') as websocket:
         global best
         await websocket.send(dic)
         data_rcv=await websocket.recv()
         print(data_rcv)
         best=json.loads(data_rcv)
+        
         return best
-SCREEN_WIDTH=800
+SCREEN_WIDTH=800 
 SCREEN_HEIGHT=800
 pygame.init()
 SCREEN=pygame.display.set_mode([SCREEN_WIDTH,SCREEN_HEIGHT])
